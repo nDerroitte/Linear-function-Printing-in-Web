@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<!--Head info-->
+    <head>
+        <meta charset="utf-8" />
+        <title>Polynomial Visualizer</title>
+        <style>
+        body
+        {
+            text-align: center;
+            font-family: "Raleway",sans-serif;
+            background-color: #6C8EAC;
+            color : white;
+        }
+        #NoJS
+        {
+          background-color: red;
+          border: 2px solid black;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 999;
+          width: 100%;
+          height: 23px;
+        }
+        #Mainimage
+        {
+          border: 1px solid black;
+          text-align: center;
+        }
+        #title
+        {
+          text-align: center;
+          font-family: "Raleway",sans-serif;
+        }
+        #Submission
+        {
+          padding: 5px;
+          border: 1px solid black;
+          display: none;
+          background-color: grey;
+        }
+        #SubmissionNOSCRIPT
+        {
+          padding: 5px;
+          border: 1px solid black;
+          display: inline-block;
+          background-color: grey;
+        }
+        </style>
+    </head>
+    <body>
+      <header>
+        <noscript>
+          <div id ="NoJS">
+            JavaScript is disabled.
+          </div>
+          <br/>
+        </noscript>
+        <h1 id="title"> Polynomial Visualizer </h1>
+      <header/>
+        <p id = "Informations">
+          Center : <span id = "CenterValue">(0,0)</span><br/>
+          Function : <span id = "fValue">none</span><br/>
+         </p>
+        <div id = "img">
+        <img id = "Mainimage" onmousemove="showCoords(event)" onmouseout="clearCoor()" onclick="reCenter(event)" src="data:image/png;base64,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" />
+        <p id = "Coord"></p>  </div>
+        <div id = "Submission">
+        Function : <input id="f" name="function"> <br/>
+        Center : (<input id="centerX" name="centerX" size = "5">,<input id="centerY" name="centerY" size = "5">) as (X,Y)       <br/><br/>
+        <button type="button" onclick="submission()">Submit</button>
+        <button type="button" onclick="Example()">Example</button>
+        </div>
+        <script>
+        	 document.getElementById('Submission').style.display='inline-block';
+        </script>
+        <noscript >
+          <form action="http://localhost:8006" method="post" id="SubmissionNOSCRIPT">
+            Function : <input  name="function" id="f"> <br/>
+            Center : (<input id="centerX" size ="5" name="centerX">,<input id="centerY" size = "5" name="centerY">) as (X,Y)       <br/><br/>
+            <button type="submit">Submit</button>
+          </form>
+
+        <p style ="text-align:left;">
+           Note that you are using the website without Javascript. <br/>
+           Therfore, the request may be longer and you don't have access to all the dynamic options of this website! </p>
+        </noscript>
+      <script>
+      var centerX = 0;
+      var centerY = 0;
+
+      var f = null;
+      var coeffs = [];
+
+      function getCoords(event){
+        var coordsObject = {};
+
+        var x = event.pageX;
+        var y = event.pageY;
+        var image = document.getElementById("Mainimage");
+
+        var realXPX = x - image.offsetLeft;
+        var realYPX = y - image.offsetTop;
+        coordsObject["x"] = (centerX)-5+(realXPX/40);
+        coordsObject["y"] = Number(centerY)+5-(realYPX/40);
+        return coordsObject;
+      }
+      function showCoords(event) {
+
+        var coords = getCoords(event);
+        var coor = "(" + coords.x.toFixed(3) + " , " + coords.y.toFixed(3) + ")";
+        document.getElementById("Coord").textContent = coor;
+      }
+
+      function clearCoor() {
+        document.getElementById("Coord").textContent = "";
+      }
+
+      function reCenter(event){
+        var coords  = getCoords(event);
+        centerX = coords.x;
+        centerY = coords.y;
+        if(f==null)
+          f = "0";
+        updateGraph();
+        var coor = "(" + centerX.toFixed(3) + " , " + centerY.toFixed(3) + ")";
+        document.getElementById("CenterValue").textContent = coor;
+      }
+      function submission() {
+        document.getElementById("f").style.backgroundColor ="white";
+        document.getElementById("centerX").style.backgroundColor ="white";
+        document.getElementById("centerY").style.backgroundColor ="white";
+
+        centerX = document.getElementById("centerX").value;
+        centerY = document.getElementById("centerY").value;
+
+        f = document.getElementById("f").value;
+
+        if(!checkFunction(f))
+        {
+          document.getElementById("f").style.backgroundColor ="red";
+          return false;
+        }
+        else
+          f = f.replace(/\s/g, '');
+
+        if(!checkCenter(centerX))
+        {
+          document.getElementById("centerX").style.backgroundColor ="red";
+          return false;
+        }
+        if(!checkCenter(centerY))
+        {
+          document.getElementById("centerY").style.backgroundColor ="red";
+          return false;
+        }
+        else
+        {
+          centerX = centerX.replace(/\s/g, '');
+          centerY = centerY.replace(/\s/g, '');
+        }
+        updateGraph();
+        var coor = "(" + centerX + " , " + centerY + ")";
+        document.getElementById("CenterValue").textContent = coor;
+        document.getElementById("fValue").textContent = f;
+      }
+      function Example(){
+        alert( "Function : 2x2 + 7x + 9 \n Center : (0,0)\nThe function can only contain the carachter [0-9], ., +, - and x.\nThe centers can only contain the carachter [0-9], ., - and x.\nNote that the decimal are separated by a point and not by a coma.\nIf you want to change the center of a function, you can also click directly on the image and it will set the center at your mouse position.")
+      }
+      function checkFunction(f){
+        if(f=="")
+        {
+          alert("Wrong argument! Please fill the function field.");
+          return false;
+        }
+        var result = f.replace(/[\d.\-x\+ ]/g, '');
+        if(result != '')
+        {
+          alert("Wrong argument! See the example button on the main page.\n");
+          return false;
+        }
+        return true;
+      }
+      function checkCenter(center){
+        if(center=="")
+        {
+          alert("Wrong argument! Please fill the centers field.");
+          return false;
+        }
+        var result = center.replace(/[\d.\- ]/g, '');
+        if(result != '')
+        {
+          alert("Wrong argument! See the example button on the main page.\n");
+          return false;
+        }
+        return true;
+      }
+
+      function updateGraph(){
+        var xmlHttpR = new XMLHttpRequest();
+        var url = "/graphView.html";
+        url = url.concat("?function=");
+      	url = url.concat(f);
+      	url = url.concat("&centerX=");
+      	url = url.concat(centerX);
+        url = url.concat("&centerY=");
+      	url = url.concat(centerY);
+        xmlHttpR.open('GET', url, true);
+        xmlHttpR.setRequestHeader("Content-Type","LoadPage");
+        xmlHttpR.onreadystatechange = function() {
+    			if (xmlHttpR.readyState === XMLHttpRequest.DONE && xmlHttpR.status === 200) {
+            var reply = JSON.parse(xmlHttpR.responseText);
+            var imageSrc = "data:image/png;base64,"+ reply[0].image;
+            document.getElementById("Mainimage").src = imageSrc;
+          }
+          if (xmlHttpR.readyState === XMLHttpRequest.DONE && xmlHttpR.status === 400) {
+            var reply = xmlHttpR.responseText;
+            if(reply=="fError")
+              document.getElementById("f").style.backgroundColor ="red";
+            else if(reply=="xError")
+              document.getElementById("centerX").style.backgroundColor ="red";
+            else if(reply=="yError")
+              document.getElementById("centerY").style.backgroundColor ="red";
+            alert("Wrong argument! See the example button on the main page.\n");
+          }
+        }
+      xmlHttpR.send(null);
+    }
+
+</script>
+    </body>
+
+</html>
